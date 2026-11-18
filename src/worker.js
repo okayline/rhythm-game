@@ -1,7 +1,7 @@
 // rhythm-game's Worker: serves the page (public/), and GET /api/today, which asks Beat Fighter for today's song so both
 // games play the same one: { day, hash }. The page makes the music from the hash with its own copy of beat.js.
 // Read only: nothing about the player is sent, and nothing is stored here.
-const BEAT_FIGHTER = "https://BEAT-FIGHTER-ADDRESS";   // Beat Fighter's live address (kura to confirm)
+const BEAT_FIGHTER = "https://beat.88x31.app";   // Beat Fighter (this game is rhythm.88x31.app)
 
 export default {
   async fetch(req, env) {
