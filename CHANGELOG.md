@@ -4,6 +4,11 @@ Newest first. Times are Hawaii time (HST).
 
 ---
 
+## v0.2.1
+**Tue Nov 17, 2026 · 11:45 PM HST**
+
+- **Drums on top:** the kit's kick plays on beats 1, 2 and 3 of every measure over the track, at the tap's volume; beat 4 stays yours. Removed: nothing.
+
 ## v0.2.0
 **Tue Nov 17, 2026 · 11:40 PM HST**
 
