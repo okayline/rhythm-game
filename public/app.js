@@ -11,6 +11,7 @@ import { grade, PERFECT, WINDOW } from "./score.js";
 
 const $ = (id) => document.getElementById(id);
 const LOOPS = 2;
+const KICK_LATE = 0.010;   // the kicks on 1, 2, 3 play this many seconds after the beat, to sit on the track's kicks (by ear)
 
 // Tap timing: ms added to every tap (positive counts your taps later), set by calibrating. Kept in this browser only.
 let offset = 0;
@@ -116,7 +117,7 @@ async function begin() {
   t0 = lead + 4 * spb;                                                        // one measure of count-in
   for (let i = 0; i < 4; i++) a.sample("hat", lead + i * spb, i === 3 ? 0.9 : 0.5);
   a.track(t0, t0 + END * spb);                                                // the track, from its beat 1, LOOPS times
-  for (let b = 0; b < END; b++) if (b % 4 !== 3) a.sample(TAP[day.style], t0 + b * spb, 0.9);   // the kit's kick on 1, 2, 3; beat 4 is yours
+  for (let b = 0; b < END; b++) if (b % 4 !== 3) a.sample(TAP[day.style], t0 + b * spb + KICK_LATE, 0.9);   // the kit's kick on 1, 2, 3; beat 4 is yours
   const reach = WINDOW / 1000 / spb;                                          // a late tap still counts this many beats after
   const frame = () => {
     if (!audio || my !== token) return;
