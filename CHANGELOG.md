@@ -4,6 +4,11 @@ Newest first. Times are Hawaii time (HST).
 
 ---
 
+## v0.2.5
+**Tue Nov 17, 2026 · 11:51 PM HST**
+
+- **Back to the track alone:** your tap is the only kick the game plays. Removed: the kit's kicks on beats 1, 2 and 3 (v0.2.1 to v0.2.4) and their timing setting.
+
 ## v0.2.4
 **Tue Nov 17, 2026 · 11:49 PM HST**
 
