@@ -1,4 +1,4 @@
-// The day's music, from the day's ledger hash (the hash of the day's entry, see ledger.js). Pure: the same hash always
+// The day's music, from the day's hash (Beat Fighter's day hash, through /api/today). Pure: the same hash always
 // gives the same music, here and anywhere else.
 //
 // Underneath is a fixed metronome: 8 measures of 4 beats (32 beats) at the day's tempo. It is never heard. Over it, a
@@ -29,9 +29,9 @@
 //   byte 3           the key: value mod 12 semitones above C
 //   byte 4           the progression (PROGRESSIONS, value mod their number)
 //
-// The chords are not played (the pad was taken out); they are kept as the day's record, shown on the ledger page.
+// The chords are not played (the pad was taken out); they are worked out but nothing uses them yet.
 //
-// THE BED: kits with beds (BEDS) also play one recorded bed under the fight: 15.0 s, exactly 8 measures at 128 BPM,
+// THE BED: kits with beds (BEDS) also play one recorded bed under the song: 15.0 s, exactly 8 measures at 128 BPM,
 // cut so its beat 1 lands on the count-in's first hat. It starts with the count-in and loops until the song ends.
 //
 //   byte 4           also the day's bed (value mod BEDS[kit]), the same byte as the progression (no byte is free)
@@ -42,15 +42,7 @@
 //                    how many the kit has, VOICES)
 //   byte 20          the day's kit (STYLES, value mod 4): hip-hop, house, bounce or tech-house
 //
-// ENEMY WIND-UPS (cue, then wait): in any measure but the first, an enemy may wind up on beat 1 with a cue sound; the
-// attack lands WAIT beats later, on beat 3, and the player taps right then to parry it.
-//
-//   byte 10          bit m set means a wind-up in measure m + 1 (bit 0 is ignored; if no bit is set, the last
-//                    measure gets one)
-//   bytes 21 to 28   which of the 3 ghost units winds up in measure m + 1: byte 21 + m, value mod 3
-//
-// TARGETS is every tap the player should make, in order: a clap on beat 4 of every measure, and a parry where each
-// wind-up lands.
+// TARGETS is every tap the player should make, in order: beat 4 of every measure.
 
 export const MEASURES = 8, MEASURE = 4, BEATS = MEASURES * MEASURE;
 export const TEMPO = { "hip-hop": [80, 100], house: [128, 128], bounce: [90, 100], "tech-house": [128, 128] };   // each kit's tempo range, BPM
@@ -62,7 +54,6 @@ export const VOICES = { "hip-hop": { kick: 3, snare: 3, hat: 1 }, house: { kick:
 export const VOICE_BYTE = { kick: 5, snare: 6, clap: 7, hat: 8, open: 9 };   // the byte that picks the day's recording of each drum
 export const HAT_RATE = { "hip-hop": 1, house: 1.2, bounce: 0.9, "tech-house": 1.1 };   // the hats of three packs are the same recording, so each kit plays it at its own pitch
 export const BEDS = { house: 5 };                         // how many beds a kit has (samples/<kit>/bed-<n>.wav); kits not listed have none
-export const WAIT = 2;                                   // beats from a wind-up's cue to where it lands
 export const SHAPE = ["A", "A", "A", "B", "A", "A", "A", "C"];
 
 
@@ -197,16 +188,11 @@ export function beat(hash) {
   const key = bytes[3] % 12, prog = PROGRESSIONS[bytes[4] % PROGRESSIONS.length];
   const chords = [...prog, ...prog.slice(0, 3), I].map(([deg, q]) => ({ root: (key + deg) % 12, quality: q }));
 
-  // wind-ups and targets
-  let windups = Array.from({ length: MEASURES }, (_, m) => m).filter((m) => m > 0 && (bytes[10] >> m) & 1);
-  if (!windups.length) windups = [MEASURES - 1];
-  const cues = windups.map((m) => ({ at: m * MEASURE, lands: m * MEASURE + WAIT, unit: bytes[21 + m] % 3 }));
-  const targets = [...CLAPS.map((at) => ({ at, kind: "clap" })), ...cues.map((c) => ({ at: c.lands, kind: "parry" }))]
-    .sort((x, y) => x.at - y.at);
+  const targets = CLAPS.map((at) => ({ at, kind: "clap" }));
 
   const [lo, hi] = TEMPO[style];
   const bpm = lo + (((bytes[18] << 8) | bytes[19]) % (hi - lo + 1));
   const voice = Object.fromEntries(KIT_DRUMS[style].map((d) => [d, bytes[VOICE_BYTE[d]] % VOICES[style][d]]));
   const bed = BEDS[style] ? bytes[4] % BEDS[style] : -1;
-  return { measures: MEASURES, bpm, style, voice, key, chords, hits, cues, targets, bed };
+  return { measures: MEASURES, bpm, style, voice, key, chords, hits, targets, bed };
 }

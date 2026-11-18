@@ -58,7 +58,6 @@ test("no drum on beat 4 in any kit, no pad is played, and every progression's fi
   for (const p of PROGRESSIONS) assert.ok([5, 7].includes(p[3][0]), "measure 4 is IV or V");
 });
 
-test("the enemy cue is a sample file", () => assert.ok(existsSync("public/samples/cue.wav")));
 
 test("the day picks one recording of each drum from bytes 5 to 9, mod how many the kit has", () => {
   // bytes 5..9 = kick 4, snare 5, clap 6, hat 7, open 8; hip-hop has 3 kicks and 3 snares, 1 hat: 4%3 = 1, 5%3 = 2, 7%1 = 0
@@ -74,16 +73,10 @@ test("the day picks one recording of each drum from bytes 5 to 9, mod how many t
   for (const k of STYLES) assert.deepEqual(Object.keys(VOICES[k]).sort(), [...KIT_DRUMS[k]].sort(), k);
 });
 
-test("wind-ups worked out by hand: cue on beat 1, lands 2 beats later on beat 3; claps on every beat 4", () => {
-  // byte 10 = 0b10000101: bits 0, 2 and 7; bit 0 (measure 1) is ignored -> measures 3 and 8
-  // units: measure index 2 -> byte 23 = 7 -> 1; index 7 -> byte 28 = 5 -> 2
-  const bytes = Array(32).fill(0);
-  bytes[10] = 0b10000101; bytes[23] = 7; bytes[28] = 5;
-  const b = beat(hex(bytes));
-  assert.deepEqual(b.cues, [{ at: 8, lands: 10, unit: 1 }, { at: 28, lands: 30, unit: 2 }]);
-  assert.deepEqual(b.targets, [3, 7, 10, 11, 15, 19, 23, 27, 30, 31].map((at) => ({ at, kind: [10, 30].includes(at) ? "parry" : "clap" })));
-  // no bits: the last measure gets the wind-up
-  assert.deepEqual(beat(hex(Array(32).fill(0))).cues, [{ at: 28, lands: 30, unit: 0 }]);
+test("the targets worked out by hand: beat 4 of every measure (0-based beats 3, 7, ... 31), whatever the hash", () => {
+  const want = [3, 7, 11, 15, 19, 23, 27, 31].map((at) => ({ at, kind: "clap" }));
+  assert.deepEqual(beat(hex(Array(32).fill(0))).targets, want);
+  assert.deepEqual(beat(hex(Array(32).fill(255))).targets, want);
 });
 
 test("each kit has 256 different patterns", () => {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Beat Fighter II: The New Challengers</title>
+  <title>Rhythm Game</title>
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -12,16 +12,12 @@
 </head>
 <body>
   <header class="top">
-    <span class="mark">Beat Fighter II:<span class="sub">The New Challengers</span></span>
-    <span class="right"><span class="date" id="date"></span><a href="ledger.html">Ledger</a></span>
+    <span class="mark">Rhythm Game<span class="sub">tap beat 4</span></span>
+    <span class="right"><span class="date" id="date"></span></span>
   </header>
 
   <main>
-    <section class="fight" aria-label="The fight">
-      <div class="bars">
-        <div class="bar you"><div class="who"><span>You</span><span id="hp0">10</span></div><div class="life"><i id="life0"></i></div><div class="meter" id="meter0"></div></div>
-        <div class="bar ghost"><div class="who"><span>Ghost</span><span id="hp1">10</span></div><div class="life"><i id="life1"></i></div><div class="meter" id="meter1"></div></div>
-      </div>
+    <section class="stage" aria-label="The song">
       <div>
         <p class="call" id="call"></p>
         <p class="result" id="result" role="status"></p>
@@ -31,16 +27,11 @@
         <span id="l0"></span><span id="l1"></span><span id="l2"></span><span id="l3" class="four"></span>
       </div>
       <canvas class="lane" id="lane" aria-hidden="true"></canvas>
-      <button class="pad" id="pad" type="button">Press / hold</button>
-    </section>
-    <section class="moves" aria-label="Moves">
-      <div class="guide" id="guide"></div>
-      <p class="key"><span><i class="k-tap"></i>tap</span><span><i class="k-hold"></i>press and hold</span><span><i class="k-four"></i>beat 4</span></p>
+      <button class="pad" id="pad" type="button">Tap</button>
     </section>
     <div class="controls">
-      <button class="play" id="play" type="button" disabled>Start fight</button>
+      <button class="play" id="play" type="button" disabled>Start</button>
       <p class="bpm"><span id="style" class="style"></span> <span id="bpm">–</span> BPM</p>
-      <p class="bpm" id="carry" hidden></p>
       <div class="timing">
         <button class="cal" id="cal" type="button" disabled>Calibrate</button>
         <span id="offsetVal"></span>
@@ -48,15 +39,11 @@
     </div>
     <p class="status" id="status" role="status"></p>
 
-    <section class="log-sec" aria-labelledby="log-title">
-      <h2 id="log-title">What happened</h2>
-      <ol class="log" id="log" reversed></ol>
-    </section>
   </main>
 
   <!-- the footer every game shows (dungeon-items src/footer.js): "🄯 ~*~88x31~*~ · § ≡ version", drawn into this spot; shown once the game has loaded -->
   <div id="ddfoot" hidden></div>
-  <script src="https://dungeon-items.ddddungeon.workers.dev/footer.js" data-version="v0.13.0"></script>
+  <script src="https://dungeon-items.ddddungeon.workers.dev/footer.js" data-version="v0.1.0"></script>
 
   <script type="module" src="app.js"></script>
 </body>

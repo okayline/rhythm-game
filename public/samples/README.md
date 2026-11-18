@@ -24,7 +24,6 @@ Files are `<kit>/<drum>-<n>.wav`; the day's seed picks n (VOICES in `public/beat
 | tech-house/hat-1 | 01-hard-trap/hi-hats/hi-hat-closed-01 |
 | tech-house/open-1 | 01-hard-trap/open-hats/open-hat-01 |
 
-| cue | 01-hard-trap/percs/perc-cowbell, cut to 0.35 s with a 100 ms fade-out |
 
 The closed hats of the hard-trap and bounce packs are the
 same recording, so those kits play it at different pitches (HAT_RATE in `public/beat.js`).

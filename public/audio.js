@@ -1,6 +1,6 @@
-// The day's sound, for the daily page and the duel page (one place, moved out of app.js): the drums are recorded
-// samples (public/samples, CC0), the day's pick of each kit's recordings, loaded with the day's beat; the enemy's cue is a
-// sample too (samples/cue.wav); kits with beds also load the day's bed (samples/<kit>/bed-<n>.wav, made with Stable Audio 3). Everything plays into one bus: a dry path and a reverb (a room made from decaying noise, its
+// The day's sound: the drums are recorded samples (public/samples, CC0), the day's pick of each kit's recordings, loaded
+// with the day's beat; kits with beds also load the day's bed (samples/<kit>/bed-<n>.wav, made with Stable Audio 3).
+// Everything plays into one bus: a dry path and a reverb (a room made from decaying noise, its
 // size set by the kit), glued by a compressor on the way out.
 import { KIT_DRUMS, HAT_RATE } from "./beat.js";
 
@@ -20,7 +20,7 @@ function makeBus(ctx, day) {
 
 async function loadSamples(ctx, day) {
   const samples = {};
-  const files = [...KIT_DRUMS[day.style].map((d) => [d, `samples/${day.style}/${d}-${day.voice[d] + 1}.wav`]), ["cue", "samples/cue.wav"]];
+  const files = [...KIT_DRUMS[day.style].map((d) => [d, `samples/${day.style}/${d}-${day.voice[d] + 1}.wav`])];
   if (day.bed >= 0) files.push(["bed", `samples/${day.style}/bed-${day.bed + 1}.wav`]);
   await Promise.all(files.map(async ([d, url]) => {
     const r = await fetch(url);

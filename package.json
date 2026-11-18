@@ -1,1 +1,1 @@
-{ "name": "moba-beat", "type": "module", "private": true, "scripts": { "test": "node --test test/*.test.mjs" } }
+{ "name": "rhythm-game", "type": "module", "private": true, "scripts": { "test": "node --test test/*.test.mjs" } }
