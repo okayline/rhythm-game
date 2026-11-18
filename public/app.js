@@ -11,7 +11,7 @@ import { grade, PERFECT, WINDOW } from "./score.js";
 
 const $ = (id) => document.getElementById(id);
 const LOOPS = 2;
-const KICK_LATE = 0.010;   // the kicks on 1, 2, 3 play this many seconds after the beat, to sit on the track's kicks (by ear)
+const KICK_LATE = 0.020;   // the kicks on 1, 2, 3 play this many seconds after the beat, to sit on the track's kicks (by ear)
 
 // Tap timing: ms added to every tap (positive counts your taps later), set by calibrating. Kept in this browser only.
 let offset = 0;
