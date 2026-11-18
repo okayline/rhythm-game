@@ -4,6 +4,11 @@ Newest first. Times are Hawaii time (HST).
 
 ---
 
+## v0.2.4
+**Tue Nov 17, 2026 · 11:49 PM HST**
+
+- **Kicks moved back:** the kicks on beats 1, 2 and 3 play 15 ms after the beat (was 20 ms). Removed: nothing.
+
 ## v0.2.3
 **Tue Nov 17, 2026 · 11:48 PM HST**
 
