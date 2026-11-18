@@ -200,7 +200,7 @@ test("a tap is scored by its distance from the metronome: perfect within 35 ms, 
   assert.deepEqual(score([1000], [900, 990, 1030]), [{ err: -10, grade: "perfect" }], "the nearest tap counts");
 });
 
-test("the day's bed worked out by hand: house days pick one by byte 4 (mod 5), other kits have none, every bed file is there", () => {
+test("the day's bed index worked out by hand (as in Beat Fighter): house days pick one by byte 4 (mod 5), other kits have none", () => {
   // byte 20 picks the kit (mod 4): 1 is house, 0 hip-hop, 3 tech-house; byte 4 also picks the bed on house days
   const day = (b4, kit) => { const b = Array(32).fill(0); b[4] = b4; b[20] = kit; return beat(hex(b)); };
   assert.equal(day(0, 1).bed, 0);
@@ -208,5 +208,17 @@ test("the day's bed worked out by hand: house days pick one by byte 4 (mod 5), o
   assert.equal(day(254, 1).bed, 4);   // 254 mod 5
   assert.equal(day(7, 0).bed, -1);    // hip-hop: no beds
   assert.equal(day(7, 3).bed, -1);    // tech-house: no beds
-  for (const n of [1, 2, 3, 4, 5]) assert.ok(existsSync(new URL(`../public/samples/house/bed-${n}.wav`, import.meta.url)), "bed-" + n);
+});
+
+test("the track is exactly 8 measures at its tempo: 32 beats x 60/128.04 s x 44100 = 661293 samples (read from the FLAC header)", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { TRACK } = await import("../public/beat.js");
+  const b = readFileSync(new URL(`../public/samples/tracks/${TRACK.file}`, import.meta.url));
+  assert.equal(b.toString("latin1", 0, 4), "fLaC");
+  const si = 8;   // STREAMINFO: after "fLaC" and its 4-byte block header
+  const rate = (b[si + 10] << 12) | (b[si + 11] << 4) | (b[si + 12] >> 4);
+  const total = (b[si + 13] & 0x0f) * 2 ** 32 + b.readUInt32BE(si + 14);
+  assert.equal(rate, 44100);
+  assert.equal(total, 661293);
+  assert.equal(TRACK.bpm, 128.04);
 });

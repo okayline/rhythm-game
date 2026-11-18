@@ -1,11 +1,11 @@
-// The daily page: tap beat 4 of every measure of the day's song: Beat Fighter's song of the day (its hash, through
-// this game's Worker, /api/today), made into music here by beat.js.
+// The daily page: tap beat 4 of every measure of the track (a Stable Audio tech-house track, TRACK in beat.js). The day
+// (and its kit, for the tap and count-in sounds) comes from Beat Fighter's song of the day, through /api/today.
 // The song plays LOOPS times after a one-measure count-in. One button: a tap is timed in beats from the song's first
 // beat on the Web Audio clock, less the device's output delay (audio.js), and moved by your tap timing. Each beat 4 is
 // graded (score.js: perfect within 35 ms, good within 80 ms) once it is out of reach of a late tap. Nothing is saved
 // except your tap timing, in this browser.
 // The lane (a canvas) scrolls the coming beats right to left past a line, with a dot on every beat 4.
-import { beat, TAP, CLAPS, MEASURES } from "./beat.js";
+import { beat, TAP, CLAPS, MEASURES, TRACK } from "./beat.js";
 import { createAudio } from "./audio.js";
 import { grade, PERFECT, WINDOW } from "./score.js";
 
@@ -35,7 +35,7 @@ async function calibrate() {
   try { a = await createAudio(day); } catch { if (my === token) { stop(); $("status").textContent = "Today's drums didn't load. Reload the page to try again."; } return; }
   if (my !== token) { try { a.ctx.close(); } catch {} return; }
   audio = a; try { await a.ctx.resume(); } catch {}
-  spb = 60 / day.bpm; t0 = a.ctx.currentTime + 0.4; cal = [];
+  spb = 60 / TRACK.bpm; t0 = a.ctx.currentTime + 0.4; cal = [];
   for (let i = 0; i < CAL_BEATS; i++) a.sample("hat", t0 + i * spb, i % 4 === 0 ? 0.9 : 0.6);
   $("call").className = "call you"; $("call").textContent = "Tap along"; $("pad").textContent = "Tap to Calibrate!";
   const frame = () => {
@@ -111,12 +111,11 @@ async function begin() {
   try { a = await createAudio(day); } catch { if (my === token) { stop(); $("status").textContent = "Today's drums didn't load. Reload the page to try again."; } return; }
   if (my !== token) { try { a.ctx.close(); } catch {} return; }
   audio = a; try { await a.ctx.resume(); } catch {}
-  spb = 60 / day.bpm;
+  spb = 60 / TRACK.bpm;
   const lead = a.ctx.currentTime + 0.2;
   t0 = lead + 4 * spb;                                                        // one measure of count-in
   for (let i = 0; i < 4; i++) a.sample("hat", lead + i * spb, i === 3 ? 0.9 : 0.5);
-  a.bed(lead, t0 + END * spb);                                                // the bed starts with the count-in's first hat
-  for (let l = 0; l < LOOPS; l++) for (const h of day.hits) a.sample(h.drum, t0 + (l * MEASURES * 4 + h.at) * spb);
+  a.track(t0, t0 + END * spb);                                                // the track, from its beat 1, LOOPS times
   const reach = WINDOW / 1000 / spb;                                          // a late tap still counts this many beats after
   const frame = () => {
     if (!audio || my !== token) return;
@@ -165,14 +164,14 @@ async function load() {
     const r = await fetch("/api/today");
     if (!r.ok) throw new Error();
     const { day: date, hash } = await r.json();
-    day = { ...beat(hash), day: date, hash };
+    day = { ...beat(hash), day: date, hash, track: TRACK };
   } catch {
     $("status").textContent = "Today's song didn't load. Reload the page to try again.";
     return;
   }
   $("date").textContent = day.day;
-  $("bpm").textContent = day.bpm;
-  $("style").textContent = day.style;
+  $("bpm").textContent = Math.round(TRACK.bpm);
+  $("style").textContent = TRACK.style;
   reset();
   $("play").disabled = false; $("cal").disabled = false;
 }

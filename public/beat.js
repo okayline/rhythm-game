@@ -53,6 +53,9 @@ export const KIT_DRUMS = { "hip-hop": ["kick", "snare", "hat"], house: ["kick", 
 export const VOICES = { "hip-hop": { kick: 3, snare: 3, hat: 1 }, house: { kick: 5, snare: 3, hat: 1 }, bounce: { kick: 3, clap: 1, hat: 1, open: 1 }, "tech-house": { kick: 3, clap: 1, hat: 1, open: 1 } };   // how many recordings each kit has of each drum (samples/<kit>/<drum>-<n>.wav, n from 1)
 export const VOICE_BYTE = { kick: 5, snare: 6, clap: 7, hat: 8, open: 9 };   // the byte that picks the day's recording of each drum
 export const HAT_RATE = { "hip-hop": 1, house: 1.2, bounce: 0.9, "tech-house": 1.1 };   // the hats of three packs are the same recording, so each kit plays it at its own pitch
+// THE TRACK: rhythm-game plays a Stable Audio track instead of the drums and bed below (they stay, so a hash still makes
+// the same music as in Beat Fighter). The file is exactly 8 measures at its measured tempo, cut to start on beat 1.
+export const TRACK = { file: "tech-house-1.flac", bpm: 128.04, style: "tech-house" };
 export const BEDS = { house: 5 };                         // how many beds a kit has (samples/<kit>/bed-<n>.wav); kits not listed have none
 export const SHAPE = ["A", "A", "A", "B", "A", "A", "A", "C"];
 
